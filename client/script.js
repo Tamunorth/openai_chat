@@ -75,7 +75,9 @@ const handleSubmit = async (e) => {
 
   loader(messageDiv);
 
-  const response = await fetch("https://openai-chat-dcin.onrender.com", {
+  const baseUrl = "http://localhost:3000";
+
+  const response = await fetch(`${baseUrl}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -91,6 +93,7 @@ const handleSubmit = async (e) => {
 
   if (response.ok) {
     const data = await response.json();
+    // console.log(data);
 
     const parsedData = data.bot.trim();
 

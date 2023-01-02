@@ -8,8 +8,6 @@ import { Configuration, OpenAIApi } from "openai";
 
 dotenv.config();
 
-console.log(process.env.OPENAI_API_KEY);
-
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -42,6 +40,18 @@ app.post("/", async (req, res) => {
       presence_penalty: 0,
     });
 
+    // const response = await openai.createImage({
+    //   prompt: `${prompt}`,
+    //   n: 10,
+    //   size: "1024x1024",
+    // });
+
+    // let image_url = response.data.data
+    //   .map((value) => `${value.url}`)
+    //   .join("\n\n");
+
+    // console.log(image_url);
+
     res.status(200).send({
       bot: response.data.choices[0].text,
     });
@@ -52,4 +62,26 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.post("/images", async (req, res) => {
+  try {
+    const prompt = req.body.prompt;
+
+    // const number = req.body.count;
+
+    const response = await openai.createImage({
+      prompt: `${prompt}`,
+      n: 5,
+      size: "1080x1920",
+    });
+    let image_url = response.data.data[0].url;
+
+    res.status(200).send({
+      bot: response.data.data,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({ error });
+  }
+});
 app.listen(3000, () => console.log("listening on port http://localhost:3000"));
